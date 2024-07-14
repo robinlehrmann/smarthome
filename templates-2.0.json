@@ -1,0 +1,78 @@
+{
+  "version": "3",
+  "templates": [
+    {
+      "id": 1,
+      "type": 1,
+      "title": "Mosquitto",
+      "description": "Eclipse Mosquitto is an open source message broker which implements MQTT version 5, 3.1.1 and 3.1",
+      "categories": ["messaging"],
+      "platform": "linux",
+      "logo": "https://hub.docker.com/api/media/repos_logo/v1/library%2Feclipse-mosquitto",
+      "image": "eclipse-mosquitto:2.0.18",
+      "restart_policy": "unless-stopped"
+    },
+    {
+      "id": 2,
+      "type": 1,
+      "title": "homeassistant",
+      "description": "Open source home automation that puts local control and privacy first. Powered by a worldwide community of tinkerers and DIY enthusiasts.",
+      "categories": ["automation"],
+      "platform": "linux",
+      "logo": "https://www.gravatar.com/avatar/461df105cc6cfcf386ebd5af85b925dc?s=120&r=g&d=404",
+      "image": "homeassistant/home-assistant:stable",
+      "env": [
+        {
+          "name": "TZ",
+          "label": "Timezone",
+          "default": "Europe/Berlin",
+          "preset": true
+        }
+      ],
+      "restart_policy": "unless-stopped"
+    },
+    {
+      "id": 3,
+      "type": 1,
+      "title": "zigbee2mqtt",
+      "description": "Zigbee to MQTT bridge, get rid of your proprietary Zigbee bridges",
+      "categories": ["automation"],
+      "platform": "linux",
+      "logo": "https://www.zigbee2mqtt.io/logo.png",
+      "image": "koenkk/zigbee2mqtt:latest",
+      "env": [
+        {
+          "name": "TZ",
+          "label": "Timezone",
+          "default": "Europe/Berlin",
+          "preset": true
+        }
+      ],
+      "volumes": [
+        {
+          "container": "/app/data",
+          "bind": "/opt/zigbee2mqtt/data"
+        }
+      ],
+      "restart_policy": "unless-stopped"
+    },
+    {
+      "id": 4,
+      "type": 3,
+      "title": "Smarthome",
+      "description": "Smarthome stack with Mosquitto, zigbee2mqtt and homeassistant",
+      "categories": ["automation"],
+      "platform": "linux",
+      "repository": {
+        "url": "https://github.com/robinlehrmann/smarthome",
+        "stackfile": "docker-compose.yml"
+      },
+      "env": [
+        {
+          "name": "DOMAIN",
+          "label": "Domain name"
+        }
+      ]
+    }
+  ]
+}

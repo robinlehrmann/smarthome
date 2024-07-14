@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0.18
+    restart: unless-stopped
+    volumes:
+      - "/opt/mosquitto:/mosquitto/config"
+    networks:
+      - home_network
+
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt:latest
+    environment:
+      TZ: Europe/Berlin
+      VIRTUAL_HOST: ${ZIGBEE2MQTT_HOST}
+      VIRTUAL_PORT: 8080
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    devices:
+      - /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_f69c5db35329ec118ab06d7840c9ce8d-if00-port0:/dev/ttyACM0
+    networks:
+      - home_network
+    volumes:
+      - "/opt/zigbee2mqtt:/app/data"
+
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    environment:
+      TZ: Europe/Berlin
+      VIRTUAL_HOST: ${HOMEASSISTANT_HOST}
+      VIRTUAL_PORT: 8123
+    restart: unless-stopped
+    depends_on:
+      - zigbee2mqtt
+    networks:
+      - home_network
+    volumes:
+      - "/opt/homeassistant:/config"
+
+networks:
+  home_network:
+    driver: bridge
