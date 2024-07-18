@@ -36,6 +36,9 @@ services:
       - zigbee2mqtt
     networks:
       - home_network
+    devices:
+      - /dev/video0:/dev/video0
+      - /dev/video1:/dev/video1
     volumes:
       - "/opt/homeassistant:/config"
 
